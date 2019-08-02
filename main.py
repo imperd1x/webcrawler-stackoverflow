@@ -6,4 +6,4 @@ sys.tracebacklimit = 0
 
 if __name__ == "__main__":
     q = q.Questions()
-    q.explore()
+    q.first_sprint()

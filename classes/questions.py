@@ -6,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 import urllib.parse as urlparse
 
+
 class Questions:
 
     url_base = "https://stackoverflow.com"
@@ -21,7 +22,6 @@ class Questions:
 
         # Questions list
         questions = self.soup.select(".question-summary")
-
         for item in questions:
             # Get Info from each item
             q = item.select_one('.question-hyperlink').getText()
@@ -30,6 +30,8 @@ class Questions:
             views = item.select_one('.views').attrs['title']
             views = re.sub('[^0-9]', '', str(views))
             q_id = link.split('/')[2]
+
+            self.save_question_id(q_id)
 
             # Get total'[^0-9,]', "" of answers
             answers = item.find("div", class_="status answered")
@@ -77,6 +79,31 @@ class Questions:
         else:
             return output
 
+    def save_question_id(self, question_id):
+        with open("./question_ids.txt", "r+") as file:
+            for line in file:
+                if question_id in line:
+                    break
+            else:  # not found, we are at the eof
+                file.write(question_id+'\n')  # append missing data
+
+    def first_sprint(self):
+        # Get data from first page
+        questions_json = self.get_questions_from_page()
+        
+        # Save on the file
+        f = open('./results/1.txt', 'w')
+        f.write(questions_json)
+        f.close()
+
+        # Restart questions data
+        self.questions_data = {
+            "questions": []
+        }
+
+        # Explore other pages 
+        self.explore()
+
     def explore(self):
 
         print('\n')
@@ -87,6 +114,9 @@ class Questions:
         print(65*'*')
         print('\n')
         print('| Connecting...')
+
+        count_group_pages = 0
+        limit_to_merge = 2
 
         while True:
             time.sleep(1)
@@ -109,14 +139,22 @@ class Questions:
 
                     print(65*'=')
                     for i in range(101):
-                        print('| ' + 'Page ===> ' + get_pagination + '{:25}%'.format(i) , end='\r')
-                        time.sleep(.05)
+                        print('| ' + 'Page ===> ' + get_pagination +
+                              '{:25}%'.format(i), end='\r')
+                        time.sleep(.03)
 
                     print('\n| Done. ')
 
-                    f = open('./results/'+page_id+'.txt', 'w')
-                    f.write(questions_json)
-                    f.close()
+                    if(count_group_pages == limit_to_merge):
+                        f = open('./results/'+page_id+'.txt', 'w')
+                        f.write(questions_json)
+                        f.close()
+                        count_group_pages = 0
+                        self.questions_data = {
+                            "questions": []
+                        }
+                    else:
+                        count_group_pages += 1
 
             uri_base = get_pagination
             res = requests.get(self.url_base+uri_base)
