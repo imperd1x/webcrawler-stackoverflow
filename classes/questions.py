@@ -1,11 +1,11 @@
-import os
+#!/usr/bin/python3
+
 import re
 import time
 import json
 import requests
 from core import dbconnection
 from bs4 import BeautifulSoup
-import urllib.parse as urlparse
 
 
 class Questions:
@@ -92,13 +92,13 @@ class Questions:
         # Get data from first page
         questions_json = self.get_questions_from_page()
 
-        # Get pagination 
+        # Get pagination
         get_pagination = self.url_base+self.uri_base
 
         print(65*'=')
         for i in range(101):
             print('| ' + 'Page ===> ' + get_pagination +
-                    '{:25}%'.format(i), end='\r')
+                  '{:25}%'.format(i), end='\r')
             time.sleep(.03)
 
         print('\n| Done. ')
@@ -131,7 +131,7 @@ class Questions:
                 print(65*'=')
                 for i in range(101):
                     print('| ' + 'Page ===> ' + get_pagination +
-                        '{:25}%'.format(i), end='\r')
+                          '{:25}%'.format(i), end='\r')
                     time.sleep(.03)
 
                 print('\n| Done. ')

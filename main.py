@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from classes import questions as q
 import sys
 
