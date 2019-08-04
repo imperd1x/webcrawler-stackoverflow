@@ -3,20 +3,20 @@ import re
 import time
 import json
 import requests
+from core import dbconnection
 from bs4 import BeautifulSoup
 import urllib.parse as urlparse
 
 
 class Questions:
 
+    db = dbconnection.database()
     url_base = "https://stackoverflow.com"
     uri_base = "/questions?tab=votes"
     res = requests.get(url_base+uri_base)
     soup = BeautifulSoup(res.text, "html.parser")
 
-    questions_data = {
-        "questions": []
-    }
+    questions_data = []
 
     def get_questions_from_page(self):
 
@@ -53,18 +53,19 @@ class Questions:
             try:
                 re.findall("\\d+", answered_accepted)[0]
             except IndexError:
-                answered_accepted = 'False'
+                answered_accepted = 0
             else:
                 vote_count = item.select_one('.vote-count-post').getText()
                 answers = str(re.findall("\\d+", answered_accepted)[0])
-                answered_accepted = 'True'
+                answered_accepted = 1
 
-            self.questions_data['questions'].append({
+            self.questions_data.append({
                 "id": q_id,
                 "question": q,
                 "answers": answers,
                 "views": views,
                 "vote_count": vote_count,
+                "answered_accepted": answered_accepted,
                 "link": link
             })
 
@@ -90,30 +91,28 @@ class Questions:
     def first_sprint(self):
         # Get data from first page
         questions_json = self.get_questions_from_page()
-        
-        # Save on the file
-        f = open('./results/1.txt', 'w')
-        f.write(questions_json)
-        f.close()
+
+        # Get pagination 
+        get_pagination = self.url_base+self.uri_base
+
+        print(65*'=')
+        for i in range(101):
+            print('| ' + 'Page ===> ' + get_pagination +
+                    '{:25}%'.format(i), end='\r')
+            time.sleep(.03)
+
+        print('\n| Done. ')
+
+        # Send the question to insert on database
+        self.db.insertBulkList(questions_json)
 
         # Restart questions data
-        self.questions_data = {
-            "questions": []
-        }
+        self.questions_data = []
 
-        # Explore other pages 
+        # Explore other pages
         self.explore()
 
     def explore(self):
-
-        print('\n')
-        print(65*'*')
-        print('* Web Crawler to stackoverflow.com')
-        print('* This is example how get all questions')
-        print('* Cristiano Perdigao <https://github.com/cristianodpp>')
-        print(65*'*')
-        print('\n')
-        print('| Connecting...')
 
         count_group_pages = 0
         limit_to_merge = 2
@@ -127,35 +126,23 @@ class Questions:
                 print('Success! Nothing more to do.')
                 break
             else:
-                parsed = urlparse.urlparse(get_pagination)
-                page_id = urlparse.parse_qs(parsed.query)['page'][0]
+                questions_json = self.get_questions_from_page()
 
-                if(os.path.exists('./results/'+page_id+'.txt')):
-                    print(65*'=')
-                    print('| ' + 'Page ===> ' + get_pagination)
-                    print('| Skipped, file already exist.')
+                print(65*'=')
+                for i in range(101):
+                    print('| ' + 'Page ===> ' + get_pagination +
+                        '{:25}%'.format(i), end='\r')
+                    time.sleep(.03)
+
+                print('\n| Done. ')
+
+                if(count_group_pages == limit_to_merge):
+                    self.db.insertBulkList(questions_json)
+                    count_group_pages = 0
+                    self.questions_data = []
                 else:
-                    questions_json = self.get_questions_from_page()
-
-                    print(65*'=')
-                    for i in range(101):
-                        print('| ' + 'Page ===> ' + get_pagination +
-                              '{:25}%'.format(i), end='\r')
-                        time.sleep(.03)
-
-                    print('\n| Done. ')
-
-                    if(count_group_pages == limit_to_merge):
-                        f = open('./results/'+page_id+'.txt', 'w')
-                        f.write(questions_json)
-                        f.close()
-                        count_group_pages = 0
-                        self.questions_data = {
-                            "questions": []
-                        }
-                    else:
-                        count_group_pages += 1
+                    count_group_pages += 1
 
             uri_base = get_pagination
-            res = requests.get(self.url_base+uri_base)
+            res = requests.get(self.url_base + uri_base)
             self.soup = BeautifulSoup(res.text, "html.parser")
