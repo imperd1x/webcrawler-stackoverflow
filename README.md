@@ -28,11 +28,23 @@ This project uses [BeautifulSoup 4.4.0](https://www.crummy.com/software/Beautifu
 ## Requirements
 
     - python3 
-    - bs4 
+    - bs4
+    - pymysql
+    - unidecode
+    - requests    
 
 ## Install
 
     $ brew install python3
+
+    $ pip3 install bs4
+    
+    $ pip3 install pymysql
+
+    $ pip3 install unidecode
+
+    $ pip3 install requests
+    
 
     $ pip3 install bs4
 
