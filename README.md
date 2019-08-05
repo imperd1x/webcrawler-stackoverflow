@@ -1,8 +1,7 @@
 # Webcrawler Stackoverflow
-Python Script to get all questions from this website.
+Python script to captures data from questions of stackoverflow and save the information in MySQL database. 
 
-Implemented MySQL connection to insert on table.
-
+```mysql
 CREATE TABLE `questions` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(355) DEFAULT NULL,
@@ -15,7 +14,7 @@ CREATE TABLE `questions` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `stackoverflow_id` (`stackoverflow_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1801 DEFAULT CHARSET=utf8;
-
+```
 
 ![alt text](https://raw.githubusercontent.com/cristianodpp/webcrawler-stackoverflow/master/234234242.png)
 
