@@ -46,7 +46,6 @@ This project uses [BeautifulSoup 4.4.0](https://www.crummy.com/software/Beautifu
     $ pip3 install unidecode
 
     $ pip3 install requests
-    
 
     $ pip3 install bs4
 
