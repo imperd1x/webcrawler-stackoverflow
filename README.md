@@ -37,15 +37,16 @@ Create your database and insert the table
 CREATE TABLE `questions` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(355) DEFAULT NULL,
-  `description` text,
   `link` varchar(500) DEFAULT NULL,
   `answers` int(8) DEFAULT NULL,
   `views` int(9) DEFAULT NULL,
   `answered_accepted` tinyint(1) DEFAULT NULL,
+  `description` text,
   `stackoverflow_id` int(12) DEFAULT NULL,
+  `creation_time` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `stackoverflow_id` (`stackoverflow_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1801 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=446564 DEFAULT CHARSET=utf8;
 ```
 
 Please change the strings inside file [/core/dbconnection.py] to connect database 
