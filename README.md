@@ -24,28 +24,24 @@ CREATE TABLE `questions` (
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-This project uses [BeautifulSoup 4.4.0](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) 
-
 ## Requirements
-
-    - python3 
-    - bs4
-    - pymysql
-    - unidecode
-    - requests    
+- [Python 3](https://www.python.org/downloads/)
+- [PyMySQL](https://pypi.org/project/PyMySQL/)
+- [Unidecode](https://pypi.org/project/Unidecode/)
+- [Requests](https://pypi.org/project/requests/)
 
 ## Install
-
-    $ brew install python3
-
-    $ pip3 install bs4
-    
-    $ pip3 install pymysql
-
-    $ pip3 install unidecode
-
-    $ pip3 install requests
-
-    $ pip3 install bs4
-
+```sh
+$ brew install python3
+```sh
+$ pip3 install bs4
+```sh
+$ pip3 install pymysql
+```
+```sh
+$ pip3 install unidecode
+```
+```sh
+$ pip3 install requests
+```
 
