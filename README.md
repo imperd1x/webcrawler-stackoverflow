@@ -47,3 +47,7 @@ $ pip3 install unidecode
 $ pip3 install requests
 ```
 
+Please change the strings inside file to connect database
+```python
+self.db = pymysql.connect("localhost", "username", "password", "database")
+```
