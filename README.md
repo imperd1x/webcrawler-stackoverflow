@@ -33,8 +33,10 @@ CREATE TABLE `questions` (
 ## Install
 ```sh
 $ brew install python3
+```
 ```sh
 $ pip3 install bs4
+```
 ```sh
 $ pip3 install pymysql
 ```
